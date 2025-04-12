@@ -1,46 +1,32 @@
+import java.util.Arrays;
+
 public class ServiceRegistration {
 
-    public static void registrationOfAccount(String password, String login, String confirmPassword) {
 
-        int counter = 0;
-        int counter2 = 0;
-        String acceptableCharacters = ("1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_");
-        char[] symbols = new char[acceptableCharacters.length()];
-        char[] passwordCharsArray = new char[password.length()];
-        char[] loginCharsArray = new char[login.length()];
+    private static void checkLogin(String login) {
+        boolean result = login.matches("\\w{6,20}");// минимальная длина логина и пароля не была оговорина в условии задачи, установил сам, обычно при регистрации оговариают этот момент
 
-        acceptableCharacters.getChars(0, (acceptableCharacters.length()), symbols, 0);
-
-        password.getChars(0, (password.length()), passwordCharsArray, 0);
-
-        login.getChars(0, (login.length()), loginCharsArray, 0);
-
-        for (int i = 0; i < loginCharsArray.length; i++) {
-            char nextSymbol = loginCharsArray[i];
-            for (int j = 0; j < acceptableCharacters.length(); j++) {
-                if (nextSymbol != symbols[j]) {
-                    continue;
-                } else counter++;
-            }
+        if (!result) {
+            throw new WrongLoginException("Логин имеет не верный формат или длинна логина не коректна!!!");
         }
-        if (counter < loginCharsArray.length || loginCharsArray.length > 20) {
-            throw new WrongLoginException("Логин имеет не верный формат или длинна логина больше допустимой!!!");
-        }
+    }
 
-        for (int i = 0; i < passwordCharsArray.length; i++) {
-            char nextSymbol = passwordCharsArray[i];
-            for (int j = 0; j < acceptableCharacters.length(); j++) {
-                if (nextSymbol != symbols[j]) {
-                    continue;
-                } else counter2++;
-            }
-        }
-        if (counter2 < passwordCharsArray.length || passwordCharsArray.length > 20) {
-            throw new WrongPasswordException("Пароль имеет не верный формат или длинна пароля больше допустимой!!!");
+    private static void checkPassword(String password, String confirmPassword) {
+        boolean result = password.matches("\\w{6,20}");
+        if (!result) {
+            throw new WrongPasswordException("Пароль имеет не верный формат или длинна пароля не коректна!!!");
         }
         if (!password.equals(confirmPassword)) {
-            throw new WrongPasswordException("Пароли не совподают, попробуйте еще раз!!!");
+            throw new WrongPasswordException("Пароли не совпадают, попробуйте еще раз!!!");
         }
+    }
+
+
+    public static void registrationOfAccount(String password, String login, String confirmPassword) {
+        checkLogin(login);
+        checkPassword(password, confirmPassword);
+
+
 
     }
 }
